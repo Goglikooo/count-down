@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.timeItem {
+  @apply text-center  w-[90px] h-[140px] flex justify-between flex-col 2xl:w-[200px] 2xl:h-[200px] lg:w-[150px] lg:h-[180px];
+}
+
+.numbers {
+  @apply relative text-6xl text-[#fb6087]  font-bold py-5  font-[RedHatText] font-sans lg:text-8xl 2xl:text-8xl 2xl:h-[150px] lg:py-5 rounded-2xl;
+}
+
+.words {
+  @apply text-[#8486a9] text-xs tracking-widest font-[RedHatText] font-sans lg:text-xl 2xl:text-2xl;
+}
+
+.mydiv:hover path {
+  fill: #fb6087;
+}
