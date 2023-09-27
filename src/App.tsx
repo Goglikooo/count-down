@@ -1,30 +1,48 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import FacebookLogo from "./CustomLogos/FacebookLogo";
 import InstagramLogo from "./CustomLogos/InstagramLogo";
 import PinterestLogo from "./CustomLogos/PinterestLogo";
 
 function App() {
-  let [distance, setDistance] = useState<number>(0);
-  let [days, setDays] = useState<number>(0);
-  let [hours, setHours] = useState<number>(0);
-  let [minutes, setMinutes] = useState<number>(0);
-  let [seconds, setSeconds] = useState<number>(0);
+  let [timerDays, setTimerDays] = useState<number>(0);
+  let [timerHours, setTimerHours] = useState<number>(0);
+  let [timerMinutes, setTimerMinutes] = useState<number>(0);
+  let [timerSeconds, setTimerSeconds] = useState<number>(0);
 
-  let future: number = new Date("Oct 30, 2023 00:00:00").getTime();
-  let today: number = new Date().getTime();
+  let interval: any = useRef();
 
-  let myInterval: number = setInterval(function () {
-    setDistance(future - today);
-    setSeconds(Math.floor((distance % (1000 * 60)) / 1000));
-    setMinutes(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
-    setHours(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    setDays(Math.floor(distance / (1000 * 60 * 60 * 24)));
-  }, 1000);
+  let startTimer = () => {
+    const future: number = new Date("Oct 30, 2023 00:00:00").getTime();
 
-  if (distance < 0) {
-    clearInterval(myInterval);
-  }
+    interval = setInterval(() => {
+      const today: number = new Date().getTime();
+      const distance = future - today;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if (distance < 0) {
+        //stop timer
+        clearInterval(interval.current);
+      } else {
+        // update the timer
+        setTimerDays(days);
+        setTimerHours(hours);
+        setTimerMinutes(minutes);
+        setTimerSeconds(seconds);
+      }
+    }, 1000);
+  };
+
+  useEffect(() => {
+    startTimer();
+    clearInterval(interval.current);
+  });
 
   return (
     <div className="App ">
@@ -42,13 +60,17 @@ function App() {
                 <div className="bg-[#3a3c60] rounded-xl"></div>
               </div>
               <span className="relative">
-                {days < 0 ? "expired" : days > 9 ? days : "0" + days}
+                {timerDays < 0
+                  ? "expired"
+                  : timerDays > 9
+                  ? timerDays
+                  : "0" + timerDays}
               </span>
               <div className="absolute inset-0 flex items-center">
                 <div className="h-px w-full bg-black"></div>
               </div>
             </div>
-            <div className="words">{days > 1 ? "DAYS" : "DAY"}</div>
+            <div className="words">{timerDays > 1 ? "DAYS" : "DAY"}</div>
           </div>
 
           <div className="timeItem">
@@ -58,13 +80,13 @@ function App() {
                 <div className="bg-[#3a3c60] rounded-xl"></div>
               </div>
               <span className="relative">
-                {hours > 9 ? hours : "0" + hours}
+                {timerHours > 9 ? timerHours : "0" + timerHours}
               </span>
               <div className="absolute inset-0 flex items-center">
                 <div className="h-px w-full bg-black"></div>
               </div>
             </div>
-            <div className="words">{hours > 1 ? "HOURS" : "HOUR"}</div>
+            <div className="words">{timerHours > 1 ? "HOURS" : "HOUR"}</div>
           </div>
 
           <div className="timeItem">
@@ -74,13 +96,15 @@ function App() {
                 <div className="bg-[#3a3c60] rounded-xl"></div>
               </div>
               <span className="relative">
-                {minutes > 9 ? minutes : "0" + minutes}
+                {timerMinutes > 9 ? timerMinutes : "0" + timerMinutes}
               </span>
               <div className="absolute inset-0 flex items-center">
                 <div className="h-px w-full bg-black"></div>
               </div>
             </div>
-            <div className="words">{minutes > 1 ? "MINUTES" : "MINUTE"}</div>
+            <div className="words">
+              {timerMinutes > 1 ? "MINUTES" : "MINUTE"}
+            </div>
           </div>
 
           <div className="timeItem">
@@ -90,13 +114,15 @@ function App() {
                 <div className="bg-[#3a3c60] rounded-xl"></div>
               </div>
               <span className="relative">
-                {seconds > 9 ? seconds : "0" + seconds}
+                {timerSeconds > 9 ? timerSeconds : "0" + timerSeconds}
               </span>
               <div className="absolute inset-0 flex items-center">
                 <div className="h-px w-full bg-black"></div>
               </div>
             </div>
-            <div className="words">{seconds > 1 ? "SECONDS" : "SECOND"}</div>
+            <div className="words">
+              {timerSeconds > 1 ? "SECONDS" : "SECOND"}
+            </div>
           </div>
         </div>
         <div className="flex gap-6 justify-center absolute bottom-0 w-[100%] py-[3rem] lg:py-[4rem] xl:py-[5rem] 2xl:py-[6rem] bg-[url('./assets/pattern-hills.svg')] bg-cover  bg-center">
