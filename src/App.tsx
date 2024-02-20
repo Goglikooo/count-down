@@ -13,7 +13,7 @@ function App() {
   let interval: any = useRef();
 
   let startTimer = () => {
-    const future: number = new Date("Oct 30, 2023 00:00:00").getTime();
+    const future: number = new Date("Oct 30, 2024 00:00:00").getTime();
 
     interval = setInterval(() => {
       const today: number = new Date().getTime();
